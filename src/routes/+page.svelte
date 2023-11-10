@@ -108,16 +108,26 @@
 		display: flex;
 		position: relative;
 	}
+
+	@media(max-width: 800px) {
+		.container {
+			flex-direction: column;
+		}
+	}
+
 	.schema, .form, .output {
-		width: 32%;
 		border: solid 1px black;
-		height: 99vh;
+		min-width: 33vw;
+		min-height: 33vh;
 		position: relative;
 	}
 	.schema {
 		border: none;
 		display: flex;
 		flex-direction: column;
+	}
+	.schema textarea {
+		flex-grow: 1;
 	}
 	.form, .output {
 		margin-left: 1%;

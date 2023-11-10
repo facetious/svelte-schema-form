@@ -39,7 +39,7 @@
 	let validationErrors = {} as ValidationErrors;
 
 	const revalidate = (newValue?: any) => {
-		const validate = validator(nullOptionalsAllowed(schema), { includeErrors: true, allErrors: true, allowUnusedKeywords: true });
+		const validate = validator(nullOptionalsAllowed(schema), { includeErrors: true, allErrors: true, allowUnusedKeywords: true, formats: { "date-time": (val) => !isNaN(new Date(val).getTime()) } });
 		const validatorResult = validate(newValue || value);
 		validationErrors = Object.fromEntries(
 			(validate.errors || []).map(ve => errorMapper(schema, value, ve.keywordLocation, ve.instanceLocation))
@@ -95,7 +95,7 @@
 		idx: incr()
 	} as CommonComponentParameters;
 
-	const pathChanged = (path: string[], val: any, op?: string) => {
+	const pathChanged = (path: string[], val: any, op?: string, type?: string) => {
 		let changed = false;
 
 		if (val instanceof FileList) {
@@ -119,6 +119,9 @@
 			if (path.length === 0) {
 				params.value = val;
 			} else {
+				if (type === 'datetime-local') {
+					val = new Date(new Date(val).getTime() - new Date().getTimezoneOffset() * 60_000).toISOString();
+				}
 				set(params.value, path, val);
 			}
 		}

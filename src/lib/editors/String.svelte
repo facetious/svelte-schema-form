@@ -19,7 +19,7 @@
 <!-- event which calls pathChanged should be after all bindings so 'value' will have been updated -->
 <svelte:component this={params.components['fieldWrapper']} {params} {schema}>
 	<input id={params.path.join('.')} name={params.path.join('.')}
-		type={type} value={value || ''}
+		type={type} value={value ? (type === 'datetime-local' ? new Date(value).toISOString().replace('Z', '') : value) : ''}
 		disabled={schema.readOnly || params.containerReadOnly}
-		on:input={ev => params.pathChanged(params.path, ev.currentTarget.value || undefined)} />
+		on:input={ev => params.pathChanged(params.path, ev.currentTarget.value || undefined, undefined, type)} />
 </svelte:component>
