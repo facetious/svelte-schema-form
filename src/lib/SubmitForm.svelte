@@ -17,6 +17,7 @@
 	export let action: string = '';
 	export let components: Record<string, new (...args: any[]) => any> = {};
 	export let collapsible: boolean = false;
+	export let submitId = "";
 	export let submitText = "Submit";
 	export let submitRequiresDirty = true;
 	export let componentContext = {} as Record<string, unknown>;
@@ -115,6 +116,6 @@
 <form class='svelte-schema-form' {action} class:dirty>
 	<SchemaForm bind:schema {value} on:value={change} bind:dirty bind:uploadFiles {showErrors} {components} {collapsible} {componentContext} />
 	<div class="button-container">
-		<button type={action ? "submit" : "button"} class="submit-button" on:click={submit} class:dirty={dirty}>{submitText}</button>
+		<button type={action ? "submit" : "button"} class="submit-button" id={submitId} on:click={submit} class:dirty={dirty}>{submitText}</button>
 	</div>
 </form>

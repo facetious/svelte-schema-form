@@ -90,7 +90,7 @@
 		<textarea id="schema" on:keyup={schemaUpdate}>{JSON.stringify(schema, undefined, 2)}</textarea>
 	</div>
 	<div class="form">
-		<SubmitForm {schema} {value} on:submit={submit} on:value={change} uploadBaseUrl="https://restspace.local:3131/files" {collapsible} {componentContext} />
+		<SubmitForm {schema} {value} submitId="testing-submit" on:submit={submit} on:value={change} uploadBaseUrl="https://restspace.local:3131/files" {collapsible} {componentContext} />
 	</div>
 	<div class="output">
 		<pre>
@@ -98,6 +98,7 @@
 		</pre>
 	</div>
 </div>
+<label for="testing-submit">External Submit Button</label>
 
 <style>
 	* {
