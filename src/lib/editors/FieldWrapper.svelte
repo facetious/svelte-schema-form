@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { schemaLabel } from "../types/schema";
+	import { jsonPointerToPath, schemaLabel } from "../types/schema";
 	import type { CommonComponentParameters } from "../types/CommonComponentParameters";
 	import { stringToHtml } from "../utilities.js";
 
@@ -7,8 +7,8 @@
 	export let schema: any;
 
 	const title = schemaLabel(schema, params.path);
-	const id = params.path.join('.');
-	$: error = params.validationErrors[params.path.join('.')];
+	const id = jsonPointerToPath(params.path.join('/'));
+	$: error = params.validationErrors[id];
 </script>
 
 {#if params.containerParent !== "array"}
