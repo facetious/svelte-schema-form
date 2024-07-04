@@ -21,6 +21,7 @@
 	export let submitText = "Submit";
 	export let submitRequiresDirty = true;
 	export let componentContext = {} as Record<string, unknown>;
+	export let editorForSchema: (schema: any, originalEditorForSchema: (schema: any) => string) => string | undefined = (schema, original) => original(schema);
 
 	const dispatch = createEventDispatcher();
 	let pathProgress = writable({} as Record<string, Record<string, number>>);
@@ -114,7 +115,7 @@
 </script>
 
 <form class='svelte-schema-form' {action} class:dirty>
-	<SchemaForm bind:schema {value} on:value={change} bind:dirty bind:uploadFiles {showErrors} {components} {collapsible} {componentContext} />
+	<SchemaForm bind:schema {value} on:value={change} bind:dirty bind:uploadFiles {showErrors} {components} {collapsible} {componentContext} {editorForSchema} />
 	<div class="button-container">
 		<button type={action ? "submit" : "button"} class="submit-button" id={submitId} on:click={submit} class:dirty={dirty}>{submitText}</button>
 	</div>

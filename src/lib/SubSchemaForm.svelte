@@ -9,10 +9,7 @@
 	let typeComponent: any;
 	
 	let component: new (...args: any[]) => any;
-	$: component = components[editorForSchema(schema)];
+	$: component = components[params.editorForSchema(schema, editorForSchema)];
 </script>
 
 <svelte:component this={component} {params} {value} bind:schema />
-
-
-

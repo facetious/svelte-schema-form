@@ -15,7 +15,8 @@ export interface CommonComponentParameters {
 	containerReadOnly: boolean,
 	showErrors: boolean,
 	collapsible: boolean,
-	idx: number
+	idx: number,
+	editorForSchema: (schema: any, editorForSchema: (schema: any) => string) => string,
 }
 
 export const childComponentParameters = (params: CommonComponentParameters, propName: string) => {

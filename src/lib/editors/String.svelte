@@ -7,7 +7,7 @@
 
 	let type = "text";
 	$: {
-		const editor = editorForSchema(schema);
+		const editor = params.editorForSchema(schema, editorForSchema);
 		type = editor === "password" ? "password"
 			   : editor === "email" ? "email"
 			   : editor === "time" ? "time"

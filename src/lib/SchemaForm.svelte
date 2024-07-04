@@ -33,6 +33,7 @@
 	export let collapsible: boolean = false;
 	export let components: Record<string, new (...args: any[]) => any> = {};
 	export let componentContext: Record<string, unknown> = {};
+	export let editorForSchema: (schema: any, originalEditorForSchema: (schema: any) => string) => string | undefined = (schema, original) => original(schema);
 
 	const dispatch = createEventDispatcher();
 
@@ -92,7 +93,8 @@
 		containerReadOnly: schema.readOnly || false,
 		showErrors,
 		collapsible,
-		idx: incr()
+		idx: incr(),
+		editorForSchema,
 	} as CommonComponentParameters;
 
 	const pathChanged = (path: string[], val: any, op?: string, type?: string) => {
