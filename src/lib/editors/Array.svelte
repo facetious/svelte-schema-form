@@ -24,7 +24,7 @@
 {#if showWrapper}
 <fieldset name={params.path.join('.')} class="subset array depth-{params.path.length}">
 	{#if params.collapsible || legendText}
-	<legend class="subset-label array-label">
+	<legend id={params.path.join('.')} class="subset-label array-label">
 		{#if params.collapsible }
 		<span class="collapser {collapserOpenState}" on:click={toggle}></span>
 		{/if}
