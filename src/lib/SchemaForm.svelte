@@ -32,27 +32,31 @@
 	export let showErrors: boolean = true;
 	export let collapsible: boolean = false;
 	export let components: Record<string, new (...args: any[]) => any> = {};
+	export let validationErrors = {} as ValidationErrors;
 	export let componentContext: Record<string, unknown> = {};
 	export let editorForSchema: (schema: any, originalEditorForSchema: (schema: any) => string) => string | undefined = (schema, original) => original(schema);
 
 	const dispatch = createEventDispatcher();
 
-	let validationErrors = {} as ValidationErrors;
+	$: valueForValidation = value;
 
-	const revalidate = (newValue?: any) => {
+	$: composedValidationErrors = revalidate(validationErrors, valueForValidation);
+
+	const revalidate = (externalValidationErrors: ValidationErrors, newValue?: any) => {
 		const validate = validator(nullOptionalsAllowed(schema), { includeErrors: true, allErrors: true, allowUnusedKeywords: true, formats: { "date-time": (val) => !isNaN(new Date(val).getTime()) } });
 		const validatorResult = validate(newValue || value);
-		validationErrors = Object.fromEntries(
-			(validate.errors || []).map(ve => errorMapper(schema, value, ve.keywordLocation, ve.instanceLocation))
-		);
+		return {
+			...(externalValidationErrors || {}),
+			...Object.fromEntries(
+			(validate.errors || []).map(ve => errorMapper(schema, value, ve.keywordLocation, ve.instanceLocation)))
+		};
 	}
 
 	onMount(() => {
-		revalidate();
-		if (Object.keys(validationErrors).length > 0) {
+		if (Object.keys(composedValidationErrors).length > 0) {
 			// set initial errors
 			dispatch('value', {
-				path: [], value, errors: validationErrors
+				path: [], value, errors: composedValidationErrors
 			});
 		}
 	});
@@ -88,7 +92,7 @@
 		}, components),
 		componentContext,
 		pathChanged,
-		validationErrors,
+		validationErrors: composedValidationErrors,
 		containerParent: "none",
 		containerReadOnly: schema.readOnly || false,
 		showErrors,
@@ -128,20 +132,20 @@
 			}
 		}
 
-		revalidate(params.value);
+		valueForValidation = params.value;
 
 		const succeeded = dispatch('value', {
-			path, pathValue: val, value: params.value, errors: validationErrors, op
+			path, pathValue: val, value: params.value, errors: composedValidationErrors, op
 		}, { cancelable: true });
 
-		console.log(`dispatch value path: ${path.join('.')} val: ${JSON.stringify(val)},${op ? " op: " + op : ''} errors: ${JSON.stringify(validationErrors)}, succeeded: ${succeeded}`);
+		console.log(`dispatch value path: ${path.join('.')} val: ${JSON.stringify(val)},${op ? " op: " + op : ''} errors: ${JSON.stringify(composedValidationErrors)}, succeeded: ${succeeded}`);
 
 		// update if value event not cancelled.
 		if (succeeded) {
 			value = params.value;
 			dirty = true;
 		} else {
-			revalidate(value);
+			valueForValidation = value;
 		}
 		return val;
 	};
