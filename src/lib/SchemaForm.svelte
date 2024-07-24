@@ -135,10 +135,8 @@
 		valueForValidation = params.value;
 
 		const succeeded = dispatch('value', {
-			path, pathValue: val, value: params.value, errors: composedValidationErrors, op
+			path, pathValue: val, value: params.value, errors: revalidate(validationErrors, valueForValidation), op
 		}, { cancelable: true });
-
-		console.log(`dispatch value path: ${path.join('.')} val: ${JSON.stringify(val)},${op ? " op: " + op : ''} errors: ${JSON.stringify(composedValidationErrors)}, succeeded: ${succeeded}`);
 
 		// update if value event not cancelled.
 		if (succeeded) {
