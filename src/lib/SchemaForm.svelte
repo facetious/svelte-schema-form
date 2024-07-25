@@ -35,6 +35,7 @@
 	export let validationErrors = {} as ValidationErrors;
 	export let componentContext: Record<string, unknown> = {};
 	export let editorForSchema: (schema: any, originalEditorForSchema: (schema: any) => string) => string | undefined = (schema, original) => original(schema);
+	export let noisyLogs: boolean = false;
 
 	const dispatch = createEventDispatcher();
 
@@ -134,9 +135,15 @@
 
 		valueForValidation = params.value;
 
+		const errors = revalidate(validationErrors, valueForValidation);
+
 		const succeeded = dispatch('value', {
-			path, pathValue: val, value: params.value, errors: revalidate(validationErrors, valueForValidation), op
+			path, pathValue: val, value: params.value, errors, op
 		}, { cancelable: true });
+
+		if (noisyLogs) {
+			console.log({"dispatch value path": path.join('.'), val, op, errors, succeeded});
+		}
 
 		// update if value event not cancelled.
 		if (succeeded) {

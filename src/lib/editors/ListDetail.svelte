@@ -136,79 +136,81 @@
 </script>
 
 {#if showWrapper}
-<fieldset name={params.path.join('.')} class="subset array list-detail depth-{params.path.length}">
-	{#if params.collapsible || legendText}
-	<legend class="subset-label array-label">
-		{#if params.collapsible }
-		<span class="collapser {collapserOpenState}" on:click={toggle}></span>
-		{/if}
-		<span class="subset-label-title object-label-title">{@html stringToHtml(legendText)}</span>
-		{#if schema.description}
-		<span class="subset-label-description object-label-description">{@html stringToHtml(schema.description)}</span>
-		{/if}
-	</legend>
-	{/if}
-
-	{#if collapserOpenState === "open"}
-		{#if !emptyText}
-			<div class="table-container" tabindex="0" style:grid-template-columns={gridTemplateColumns} on:keyup={onKey} on:click={onClick}>
-			{#if mode === "list"}
-				{#each listFields as fieldName, idx}
-					<div class={headingClass(idx, sort)} on:click|stopPropagation={onSort(listProps[idx])} on:keyup|stopPropagation={onSortKey(listProps[idx])} tabIndex="0">{fieldName}</div>
-				{/each}
-				{#if !readOnly}
-					<div class="buttons-header">&nbsp;</div>
-				{/if}
-				{#each rowView as item, idx (idx)}
-					<div class="row-wrapper" class:selected={idx === selectedIdx} on:click={onSelect(idx)}>
-					{#each listProps as propName}
-						<div class="item">{item[propName] === undefined ? '\u00A0' : item[propName]}</div>
-					{/each}
-					</div>
-					{#if !readOnly}
-					<div class="array-buttons">
-						<div class="row-buttons">
-							{#if controls.includes('delete')}
-							<button type="button" class="list-control delete" title="delete" on:click|stopPropagation={arrayDelete(idx, params, value)} on:keyup|stopPropagation></button>
-							{/if}
-							{#if controls.includes('duplicate')}
-							<button type="button" class="list-control duplicate" title="duplicate" on:click|stopPropagation={arrayDuplicate(idx, params, value)} on:keyup|stopPropagation></button>
-							{/if}
-							{#if controls.includes('reorder') && sort === null &&  idx > 0}
-								<button type="button" class="list-control up" title="move up" on:click|stopPropagation={arrayUp(idx, params, value)} on:keyup|stopPropagation></button>
-							{/if}
-							{#if controls.includes('reorder') && sort === null && idx < (value || []).length - 1}
-								<button type="button" class="list-control down" title="move down" on:click|stopPropagation={arrayDown(idx, params, value)} on:keyup|stopPropagation></button>
-							{/if}
-						</div>
-					</div>
-					{/if}
-				{/each}
-			{:else}
-				<button class="to-list" type="button" on:click={onModeList} bind:this={toListButton}>List</button>
-				<div class="element">
-					<SubSchemaForm
-						params={{
-							...params,
-							path: [ ...params.path, selectedIdx.toString() ],
-							containerParent: "array",
-							containerReadOnly: params.containerReadOnly || schema.readOnly || false
-						}}
-						value={selectedValue}
-						bind:schema={schema.items}
-					/>
-					{#if schema.submit}
-					<button type="button" class="submit-button" on:click={onSubmit}>{schema.submit}</button>
-					{/if}
-				</div>
+<div class="subset array list-detail depth-{params.path.length}">
+	<fieldset name={params.path.join('.')}>
+		{#if params.collapsible || legendText}
+		<legend class="subset-label array-label">
+			{#if params.collapsible }
+			<span class="collapser {collapserOpenState}" on:click={toggle}></span>
 			{/if}
-			</div>
-		{:else}
-			<div class="emptyText">{emptyText}</div>
+			<span class="subset-label-title object-label-title">{@html stringToHtml(legendText)}</span>
+			{#if schema.description}
+			<span class="subset-label-description object-label-description">{@html stringToHtml(schema.description)}</span>
+			{/if}
+		</legend>
 		{/if}
-		{#if controls.includes('add')}
-		<button type="button" class="list-control add" title="add item" on:click={arrayAdd(schema, params, value)}></button>
+
+		{#if collapserOpenState === "open"}
+			{#if !emptyText}
+				<div class="table-container" tabindex="0" style:grid-template-columns={gridTemplateColumns} on:keyup={onKey} on:click={onClick}>
+				{#if mode === "list"}
+					{#each listFields as fieldName, idx}
+						<div class={headingClass(idx, sort)} on:click|stopPropagation={onSort(listProps[idx])} on:keyup|stopPropagation={onSortKey(listProps[idx])} tabIndex="0">{fieldName}</div>
+					{/each}
+					{#if !readOnly}
+						<div class="buttons-header">&nbsp;</div>
+					{/if}
+					{#each rowView as item, idx (idx)}
+						<div class="row-wrapper" class:selected={idx === selectedIdx} on:click={onSelect(idx)}>
+						{#each listProps as propName}
+							<div class="item">{item[propName] === undefined ? '\u00A0' : item[propName]}</div>
+						{/each}
+						</div>
+						{#if !readOnly}
+						<div class="array-buttons">
+							<div class="row-buttons">
+								{#if controls.includes('delete')}
+								<button type="button" class="list-control delete" title="delete" on:click|stopPropagation={arrayDelete(idx, params, value)} on:keyup|stopPropagation></button>
+								{/if}
+								{#if controls.includes('duplicate')}
+								<button type="button" class="list-control duplicate" title="duplicate" on:click|stopPropagation={arrayDuplicate(idx, params, value)} on:keyup|stopPropagation></button>
+								{/if}
+								{#if controls.includes('reorder') && sort === null &&  idx > 0}
+									<button type="button" class="list-control up" title="move up" on:click|stopPropagation={arrayUp(idx, params, value)} on:keyup|stopPropagation></button>
+								{/if}
+								{#if controls.includes('reorder') && sort === null && idx < (value || []).length - 1}
+									<button type="button" class="list-control down" title="move down" on:click|stopPropagation={arrayDown(idx, params, value)} on:keyup|stopPropagation></button>
+								{/if}
+							</div>
+						</div>
+						{/if}
+					{/each}
+				{:else}
+					<button class="to-list" type="button" on:click={onModeList} bind:this={toListButton}>List</button>
+					<div class="element">
+						<SubSchemaForm
+							params={{
+								...params,
+								path: [ ...params.path, selectedIdx.toString() ],
+								containerParent: "array",
+								containerReadOnly: params.containerReadOnly || schema.readOnly || false
+							}}
+							value={selectedValue}
+							bind:schema={schema.items}
+						/>
+						{#if schema.submit}
+						<button type="button" class="submit-button" on:click={onSubmit}>{schema.submit}</button>
+						{/if}
+					</div>
+				{/if}
+				</div>
+			{:else}
+				<div class="emptyText">{emptyText}</div>
+			{/if}
+			{#if controls.includes('add')}
+			<button type="button" class="list-control add" title="add item" on:click={arrayAdd(schema, params, value)}></button>
+			{/if}
 		{/if}
-	{/if}
-</fieldset>
+	</fieldset>
+</div>
 {/if}
