@@ -27,7 +27,7 @@
 <slot></slot>
 
 {#if schema.description && showDescription}
-	<div style="grid-column: 1/span 2; margin-top: -10pt; font-size: 10pt">
+	<div class="tooltip-description">
 		<span>{schema.description}</span>
 	</div>
 {/if}

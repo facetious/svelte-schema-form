@@ -86,6 +86,11 @@ form.svelte-schema-form {
 		background-color: transparent;
 	}
 
+	.tooltip-description {
+		margin-top: -10pt;
+		font-size: 10pt;
+	}
+
 	.error {
 		position: relative;
 		top: -0.5em;
